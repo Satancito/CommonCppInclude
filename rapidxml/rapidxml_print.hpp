@@ -105,7 +105,7 @@ namespace rapidxml
         inline OutIt print_children(OutIt out, const xml_node<Ch>* node, int flags, int indent);
 
         template<class OutIt, class Ch>
-        inline OutIt print_attributes(OutIt out, const xml_node<Ch>* node, int flags);
+        inline OutIt print_attributes(OutIt out, const xml_node<Ch>* node, int flags = 0);
 
         template<class OutIt, class Ch>
         inline OutIt print_data_node(OutIt out, const xml_node<Ch>* node, int flags, int indent);
@@ -206,13 +206,14 @@ namespace rapidxml
         template<class OutIt, class Ch>
         inline OutIt print_attributes(OutIt out, const xml_node<Ch> *node, int flags)
         {
+            flags =0;
             for (xml_attribute<Ch> *attribute = node->first_attribute(); attribute; attribute = attribute->next_attribute())
             {
                 if (attribute->name() && attribute->value())
                 {
                     // Print attribute name
                     *out = Ch(' '), ++out;
-                    out = copy_chars(attribute->name(), attribute->name() + attribute->name_size(), out);
+                    out = copy_chars(attribute->name(), attribute->name() + (attribute->name_size()  + flags), out); 
                     *out = Ch('='), ++out;
                     // Print attribute value using appropriate quote type
                     if (find_char<Ch, Ch('"')>(attribute->value(), attribute->value() + attribute->value_size()))
